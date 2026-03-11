@@ -21,7 +21,7 @@ const INACTIVE_COLOR = '#6B7280';
 
 export function HeartRateDisplay({ state }: HeartRateDisplayProps) {
     const { bpm, status, errorReason } = state;
-    const isActive = status === 'live' && bpm !== null;
+    const isActive = (status === 'live' || status === 'stale') && bpm !== null;
     const color = isActive ? getZoneColor(bpm) : INACTIVE_COLOR;
     const zone = isActive ? getZone(bpm) : null;
     const beatDuration = isActive && bpm > 0 ? 60 / bpm : 1;
@@ -37,9 +37,8 @@ export function HeartRateDisplay({ state }: HeartRateDisplayProps) {
                 beatDuration={beatDuration}
                 glow={zone === 'extreme'}
             />
-            <BpmText bpm={isActive || status === 'stale' ? bpm : null} color={color} />
+            <BpmText bpm={isActive ? bpm : null} color={color} />
             {statusMessage && <div className="status-message">{statusMessage}</div>}
-            {status === 'stale' && <div className="status-message">Signal Lost</div>}
         </div>
     );
 }
